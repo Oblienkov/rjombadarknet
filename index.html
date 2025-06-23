@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>РжомбаДаркнет — Современная скрытая сеть</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff9d;
+            --primary-dark: #00c97a;
+            --background: #0d0d0d;
+            --surface: rgba(30, 30, 30, 0.6);
+            --surface-solid: #1e1e1e;
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --glass-blur: blur(16px);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 80% 20%, rgba(0, 255, 157, 0.15) 0px, transparent 50%),
+                radial-gradient(at 20% 80%, rgba(0, 102, 255, 0.15) 0px, transparent 50%);
+        }
+        
+        header {
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 13, 13, 0.8);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: var(--transition);
+        }
+        
+        .logo:hover {
+            opacity: 0.8;
+        }
+        
+        .logo::before {
+            content: "";
+            display: block;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 4rem 0;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            background: linear-gradient(90deg, var(--primary), #00d0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.03em;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+        
+        .search-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+        
+        .search-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 255, 157, 0.3);
+        }
+        
+        .search-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: var(--surface-solid);
+            border-radius: 12px;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            cursor: pointer;
+            position: relative;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 0.95rem;
+            border-radius: 8px;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            background: rgba(0, 255, 157, 0.1);
+        }
+        
+        .search-input-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 157, 0.2);
+        }
+        
+        .search-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem 2.5rem;
+            background: var(--primary);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 157, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            margin-left: 1rem;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 255, 157, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 255, 157, 0.1);
+        }
+        
+        #results {
+            margin-top: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .site-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .site-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(0, 255, 157, 0.05), transparent 50%);
+            pointer-events: none;
+        }
+        
+        .site-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 255, 157, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .site-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .site-title::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .site-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .site-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .site-link:hover {
+            color: #fff;
+        }
+        
+        .site-link svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            transition: var(--transition);
+        }
+        
+        .site-link:hover svg {
+            transform: translateX(3px);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.15;
+            filter: blur(1px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            main {
+                padding: 3rem 0;
+            }
+            
+            .search-container {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+            
+            .search-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            #results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <header>
+        <div class="container">
+            <div class="logo">РжомбаДаркнет</div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Современная скрытая сеть</h1>
+                <p class="subtitle">Децентрализованная платформа для создания и поиска анонимных сайтов без цензуры и ограничений</p>
+            </section>
+            
+            <section class="search-container">
+                <div class="search-tabs">
+                    <div class="tab active" onclick="switchTab('search')">Поиск сайтов</div>
+                    <div class="tab" onclick="switchTab('url')">Прямой URL</div>
+                </div>
+                
+                <div id="search-tab">
+                    <div class="search-input-container">
+                        <input type="text" class="search-input" id="search-input" placeholder="магазин, блог, гайды...">
+                    </div>
+                    <div class="controls">
+                        <button class="btn" onclick="searchSites()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15z"/></svg>
+                            Найти сайты
+                        </button>
+                        <a href="site_builder_rzhomba.html" class="btn btn-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11H7v2h4v4h2v-4h4v-2h-4V7h-2v4z"/></svg>
+                            Создать сайт
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="url-tab" style="display: none;">
+                    <div class="search-input-container">
+                        <input type="text" class="search-input" id="url-input" placeholder="https://rzhombacraft.github.io/darknet-XXXXX/">
+                    </div>
+                    <div class="controls">
+                        <button class="btn" onclick="goToUrl()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M10 6V8H5V19H16V14H18V20C18 20.5523 17.5523 21 17 21H4C3.44772 21 3 20.5523 3 20V7C3 6.44772 3.44772 6 4 6H10ZM21 3V11H19V6.413L11.207 14.207L9.793 12.793L17.585 5H13V3H21Z"/></svg>
+                            Перейти
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <div id="results"></div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>РжомбаДаркнет · 2025 · Децентрализованная сеть на GitHub Pages</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Генерация частиц
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 20 : 40;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Анимация частиц
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes float {
+                    0%, 100% {
+                        transform: translate(0, 0);
+                    }
+                    25% {
+                        transform: translate(10px, 10px);
+                    }
+                    50% {
+                        transform: translate(5px, -5px);
+                    }
+                    75% {
+                        transform: translate(-5px, 5px);
+                    }
+                }
+            </style>
+        `);
+        
+        // Переключение между табами
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+            
+            document.getElementById('search-tab').style.display = tab === 'search' ? 'block' : 'none';
+            document.getElementById('url-tab').style.display = tab === 'url' ? 'block' : 'none';
+        }
+        
+        // Поиск сайтов через GitHub API
+        async function searchSites() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) return alert("Введите поисковый запрос");
+            
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                    <div style="display: inline-block; padding: 1rem 2rem; background: var(--surface); border-radius: 12px; border: 1px solid var(--border);">
+                        Ищем сайты...
+                    </div>
+                </div>
+            `;
+            
+            try {
+                // Здесь будет реальный запрос к GitHub API
+                // Для примера используем мок-данные
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const mockData = [
+                    {
+                        name: "darknet-market",
+                        description: "Самый тёмный рынок в РжомбаКрафт. Торгуем редкими ресурсами и модами.",
+                        url: "https://rzhombacraft.github.io/darknet-market/"
+                    },
+                    {
+                        name: "darknet-guides",
+                        description: "Коллекция гайдов по установке модов и настройке клиентов.",
+                        url: "https://rzhombacraft.github.io/darknet-guides/"
+                    },
+                    {
+                        name: "anon-blog",
+                        description: "Анонимный блог о жизни в Майнкрафте. Никто не знает, кто автор.",
+                        url: "https://rzhombacraft.github.io/anon-blog/"
+                    },
+                    {
+                        name: "secret-base",
+                        description: "Координаты секретных баз игроков. Обновляется ежедневно.",
+                        url: "https://rzhombacraft.github.io/secret-base/"
+                    }
+                ];
+                
+                // Фильтрация мок-данных по запросу
+                const filtered = mockData.filter(item => 
+                    item.name.toLowerCase().includes(query.toLowerCase()) || 
+                    item.description.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                if (filtered.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                            <div style="display: inline-block; padding: 1rem 2rem; background: var(--surface); border-radius: 12px; border: 1px solid var(--border);">
+                                Ничего не найдено по запросу "${query}"
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Отображение результатов
+                resultsContainer.innerHTML = '';
+                filtered.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'site-card';
+                    card.innerHTML = `
+                        <h3 class="site-title">${item.name.replace('darknet-', '').replace(/-/g, ' ')}</h3>
+                        <p class="site-desc">${item.description}</p>
+                        <a href="${item.url}" class="site-link" target="_blank">
+                            Открыть сайт
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path d="M10 6V8H5V19H16V14H18V20C18 20.5523 17.5523 21 17 21H4C3.44772 21 3 20.5523 3 20V7C3 6.44772 3.44772 6 4 6H10ZM21 3V11H19V6.413L11.207 14.207L9.793 12.793L17.585 5H13V3H21Z"/></svg>
+                        </a>
+                    `;
+                    resultsContainer.appendChild(card);
+                });
+                
+            } catch (error) {
+                resultsContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                        <div style="display: inline-block; padding: 1rem 2rem; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); color: #ff6b6b;">
+                            Ошибка при поиске: ${error.message}
+                        </div>
+                    </div>
+                `;
+                console.error(error);
+            }
+        }
+        
+        // Переход по прямому URL
+        function goToUrl() {
+            let url = document.getElementById('url-input').value.trim();
+            if (!url) return alert("Введите URL");
+            
+            if (!url.startsWith('http')) {
+                url = `https://rzhombacraft.github.io/darknet-${url}/`;
+            }
+            
+            window.open(url, '_blank');
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+        });
+    </script>
+</body>
+</html>
