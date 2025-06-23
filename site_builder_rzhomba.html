@@ -492,7 +492,8 @@
             const token = fixedToken;
             const repo = "Oblienkov/rjombadarknet";
             const filename = `darknet-${Math.random().toString(36).substring(2, 7)}`;
-            const path = `sites/${filename}/index.html`;
+            const path = `sites/darknet-${filename}/index.html`;  // Добавлен префикс darknet-
+            const siteUrl = `https://oblienkov.github.io/sites/darknet-${filename}/`; // Убран rjombadarknet
             const raw = marked.parse(document.getElementById('markdown').value);
             const theme = getThemeStyle();
             const content = `<!DOCTYPE html><html><head><meta charset='utf-8'><style>${theme}</style></head><body>${raw}</body></html>`;
