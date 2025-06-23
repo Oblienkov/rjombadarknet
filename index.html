@@ -411,7 +411,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15z"/></svg>
                             Найти сайты
                         </button>
-                        <a href="site_builder_rzhomba.html" class="btn btn-secondary">
+                        <a href="site_builder.html" class="btn btn-secondary">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11H7v2h4v4h2v-4h4v-2h-4V7h-2v4z"/></svg>
                             Создать сайт
                         </a>
@@ -420,7 +420,7 @@
                 
                 <div id="url-tab" style="display: none;">
                     <div class="search-input-container">
-                        <input type="text" class="search-input" id="url-input" placeholder="https://rzhombacraft.github.io/darknet-XXXXX/">
+                        <input type="text" class="search-input" id="url-input" placeholder="darknet-XXXXX">
                     </div>
                     <div class="controls">
                         <button class="btn" onclick="goToUrl()">
@@ -519,22 +519,22 @@
                     {
                         name: "darknet-market",
                         description: "Самый тёмный рынок в РжомбаКрафт. Торгуем редкими ресурсами и модами.",
-                        url: "https://rzhombacraft.github.io/darknet-market/"
+                        url: "https://oblienkov.github.io/sites/darknet-market/"
                     },
                     {
                         name: "darknet-guides",
                         description: "Коллекция гайдов по установке модов и настройке клиентов.",
-                        url: "https://rzhombacraft.github.io/darknet-guides/"
+                        url: "https://oblienkov.github.io/sites/darknet-guides/"
                     },
                     {
                         name: "anon-blog",
                         description: "Анонимный блог о жизни в Майнкрафте. Никто не знает, кто автор.",
-                        url: "https://rzhombacraft.github.io/anon-blog/"
+                        url: "https://oblienkov.github.io/sites/anon-blog/"
                     },
                     {
                         name: "secret-base",
                         description: "Координаты секретных баз игроков. Обновляется ежедневно.",
-                        url: "https://rzhombacraft.github.io/secret-base/"
+                        url: "https://oblienkov.github.io/sites/secret-base/"
                     }
                 ];
                 
@@ -585,11 +585,17 @@
         
         // Переход по прямому URL
         function goToUrl() {
-            let url = document.getElementById('url-input').value.trim();
-            if (!url) return alert("Введите URL");
+            let input = document.getElementById('url-input').value.trim();
+            if (!input) return alert("Введите название сайта (например: market)");
             
-            if (!url.startsWith('http')) {
-                url = `https://rzhombacraft.github.io/darknet-${url}/`;
+            // Обрабатываем разные форматы ввода:
+            let url;
+            if (input.startsWith('http')) {
+                url = input; // Если ввели полный URL
+            } else if (input.startsWith('darknet-')) {
+                url = `https://oblienkov.github.io/sites/${input}/`;
+            } else {
+                url = `https://oblienkov.github.io/sites/darknet-${input}/`;
             }
             
             window.open(url, '_blank');
