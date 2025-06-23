@@ -549,14 +549,14 @@
             `;
             
             try {
-                // Используем прямой URL к файлу данных на GitHub Pages
-                const response = await fetch('https://oblienkov.github.io/rjombadarknet/sites/data.json');
+                const response = await fetch('https://oblienkov.github.io/rjombadarknet/data.json');
                 
                 if (!response.ok) {
                     throw new Error(`Ошибка HTTP: ${response.status}`);
                 }
                 
-                const sites = await response.json();
+                const data = await response.json();
+                const sites = data.sites || [];
                 
                 const filtered = sites.filter(site => 
                     site.title.toLowerCase().includes(query.toLowerCase()) || 
@@ -616,15 +616,16 @@
             if (!input) return alert("Введите название сайта");
             
             try {
-                const response = await fetch('https://oblienkov.github.io/rjombadarknet/sites/data.json');
+                const response = await fetch('https://oblienkov.github.io/rjombadarknet/data.json');
                 
                 if (!response.ok) {
                     throw new Error(`Ошибка HTTP: ${response.status}`);
                 }
                 
-                const sites = await response.json();
-                const siteName = input.startsWith('darknet-') ? input : `darknet-${input}`;
-                const foundSite = sites.find(s => s.title === siteName);
+                const data = await response.json();
+                const sites = data.sites || [];
+                const siteId = input.startsWith('darknet-') ? input : `darknet-${input}`;
+                const foundSite = sites.find(s => s.id === siteId);
                 
                 if (!foundSite) {
                     throw new Error('Сайт не найден');
