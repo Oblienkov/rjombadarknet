@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>РжомбаДаркнет — Создание сайта</title>
+    <title>РжомбаДаркнет — Конструктор сайтов</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -295,10 +295,35 @@
         .spinner {
             animation: spin 1s linear infinite;
         }
+        
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--surface-solid);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            max-width: 400px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification.error {
+            border-color: #ff4d4d;
+        }
     </style>
 </head>
 <body>
     <div class="particles" id="particles"></div>
+    <div class="notification" id="notification"></div>
     
     <header>
         <div class="container">
@@ -317,7 +342,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg>
                             Тема оформления
                         </label>
-                        <select id="theme" onchange="applyTheme()">
+                        <select id="theme">
                             <option value="default">Неоновая</option>
                             <option value="terminal">Терминал</option>
                             <option value="ghost">Призрачная</option>
@@ -329,7 +354,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 22H5C3.34315 22 2 20.6569 2 19V3C2 2.44772 2.44772 2 3 2H17C17.5523 2 18 2.44772 18 3V15H22V19C22 20.6569 20.6569 22 19 22ZM18 17V19C18 19.5523 18.4477 20 19 20C19.5523 20 20 19.5523 20 19V17H18ZM6 7V9H14V7H6ZM6 11V13H14V11H6ZM6 15V17H11V15H6Z"></path></svg>
                             Шаблон сайта
                         </label>
-                        <select id="template" onchange="applyTemplate()">
+                        <select id="template">
                             <option value="">— выбери шаблон —</option>
                             <option value="shop">Игровой магазин</option>
                             <option value="blog">Анонимный блог</option>
@@ -341,7 +366,7 @@
                 <div class="options-row">
                     <div class="option-group">
                         <label class="editor-label">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1C16.9706 1 21 5.02944 21 10V10.0227C21.0001 11.6397 20.5396 13.2212 19.674 14.5708L19.5 14.8375L12 23L4.5 14.8375L4.326 14.5708C3.46045 13.2212 2.99993 11.6397 3 10.0227V10C3 5.02944 7.02944 1 12 1ZM12 3C8.364 3 5.208 5.631 4.416 9H7V11H4.416C5.208 14.369 8.364 17 12 17C15.636 17 18.792 14.369 19.584 11H17V9H19.584C18.792 5.631 15.636 3 12 3ZM12 5C14.7614 5 17 7.23858 17 10V10.0113C16.9999 10.7456 16.7833 11.4638 16.374 12.082L12 17.5L7.626 12.082C7.2167 11.4638 7.00013 10.7456 7 10.0113V10C7 7.23858 9.23858 5 12 5ZM12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7Z"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1C16.9706 1 21 5.02944 21 10V10.0227C21.0001 11.6397 20.5396 13.2212 19.674 14.5708L19.5 14.8375L12 23L4.5 14.8375L4.326 14.5708C3.46045 13.2212 2.99993 11.6397 3 10.0227V10C3 5.02944 7.02944 1 12 1ZM12 3C8.364 3 5.208 5.631 4.416 9H7V11H4.416C5.208 14.369 8.364 17 12 17C15.636 17 18.792 16.369 19.584 11H17V9H19.584C18.792 5.631 15.636 3 12 3ZM12 5C14.7614 5 17 7.23858 17 10V10.0113C16.9999 10.7456 16.7833 11.4638 16.374 12.082L12 17.5L7.626 12.082C7.2167 11.4638 7.00013 10.7456 7 10.0113V10C7 7.23858 9.23858 5 12 5ZM12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7Z"></path></svg>
                             Фейковый домен
                         </label>
                         <input id="domain" placeholder="example.onion" type="text">
@@ -385,15 +410,15 @@
                 </div>
                 
                 <div class="controls">
-                    <button class="btn" onclick="updatePreview()">
+                    <button class="btn" id="updateBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C17.3925 3 21.8787 6.87944 22.8189 12C21.8787 17.1206 17.3925 21 12 21C6.60751 21 2.12125 17.1206 1.18112 12C2.12125 6.87944 6.60751 3 12 3ZM12 5C8.364 5 5.208 7.631 4.416 11H7V13H4.416C5.208 16.369 8.364 19 12 19C15.636 19 18.792 16.369 19.584 13H17V11H19.584C18.792 5.631 15.636 5 12 5Z"></path></svg>
                         Обновить предпросмотр
                     </button>
-                    <button class="btn btn-secondary" onclick="downloadSite()">
+                    <button class="btn btn-secondary" id="downloadBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 19H20V12H22V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V12H4V19ZM13 9V16H11V9H6L12 3L18 9H13Z"></path></svg>
                         Скачать HTML
                     </button>
-                    <button class="btn" onclick="publishSite()" id="publishBtn">
+                    <button class="btn" id="publishBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 19V5H21V19H3ZM5 7H19V12H5V7ZM5 14H15V17H5V14ZM17 14H19V17H17V14Z"></path></svg>
                         Опубликовать
                     </button>
@@ -410,18 +435,132 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // ============= КОНФИГУРАЦИЯ =============
-        // ЗАМЕНИТЕ НА ВАШ ЛИЧНЫЙ ТОКЕН GITHUB
-        const GITHUB_TOKEN = "YOUR_GITHUB_TOKEN_HERE";
-        // Имя репозитория в формате username/repo
-        const GITHUB_REPO = "Oblientkov/ijombadarknet";
-        // Базовая ссылка на GitHub Pages
-        const GITHUB_PAGES_URL = `https://oblientkov.github.io/ijombadarknet/`;
-        // =========================================
+        // Конфигурация
+        const CONFIG = {
+            GITHUB_TOKEN: "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", // Замените на свой токен
+            REPO: "Oblientkov/ijombadarknet",
+            BASE_URL: "https://oblientkov.github.io/ijombadarknet/"
+        };
 
-        // Инициализация частиц
+        // DOM элементы
+        const elements = {
+            markdown: document.getElementById('markdown'),
+            preview: document.getElementById('preview'),
+            theme: document.getElementById('theme'),
+            template: document.getElementById('template'),
+            siteName: document.getElementById('siteName'),
+            siteDescription: document.getElementById('siteDescription'),
+            domain: document.getElementById('domain'),
+            updateBtn: document.getElementById('updateBtn'),
+            downloadBtn: document.getElementById('downloadBtn'),
+            publishBtn: document.getElementById('publishBtn'),
+            notification: document.getElementById('notification'),
+            particles: document.getElementById('particles')
+        };
+
+        // Шаблоны
+        const TEMPLATES = {
+            shop: `# Магазин "Чёрный Изумруд"
+
+Добро пожаловать в самый тёмный рынок Майнкрафта.
+
+## 🔥 Товары
+- Незеритовый меч — 10 изумрудов
+- Зелье невидимости — 4 изумруда
+- Эндерперлы — 2 изумруда за штуку
+
+## 📦 Как купить
+Напишите в игре:  
+\`/tell ShopKeeper купить <товар>\`
+
+> Работаем только с проверенными игроками!`,
+
+            blog: `# Анонимные мысли
+
+*Сегодня я увидел, как крипер обнял мою базу... Я плакал.*
+
+## Случайный совет
+Если у тебя есть ведро воды — у тебя есть шанс.
+
+## Мои правила
+1. Никогда не копай под собой
+2. Всегда носи с собой кровать
+3. Доверяй только алмазам`,
+
+            guide: `# Как установить мод на Майнкрафт
+
+## 📥 Шаг 1: Подготовка
+1. Скачайте мод с [проверенного сайта](https://www.curseforge.com)
+2. Установите [Forge](https://files.minecraftforge.net/)
+
+## 🛠 Шаг 2: Установка
+1. Откройте папку \`mods\`:
+   - Windows: \`%appdata%\\.minecraft\\mods\\\`
+   - Mac: \`~/Library/Application Support/minecraft/mods/\`
+2. Перетащите файл мода в эту папку
+
+> ⚠️ Сделайте бэкап мира перед установкой!`
+        };
+
+        // Темы оформления
+        const THEMES = {
+            default: `
+                :root {
+                    --primary: #00ff9d;
+                    --background: #0d0d0d;
+                    --text: #f0f0f0;
+                    --text-secondary: #b0b0b0;
+                }
+                body {
+                    font-family: 'IBM Plex Mono', monospace;
+                    background: var(--background);
+                    color: var(--text);
+                }`,
+            
+            terminal: `
+                :root {
+                    --primary: #0f0;
+                    --background: #000;
+                    --text: #0f0;
+                    --text-secondary: #090;
+                }
+                body {
+                    font-family: monospace;
+                    background: var(--background);
+                    color: var(--text);
+                }
+                pre, code {
+                    background: #111 !important;
+                }`,
+            
+            ghost: `
+                :root {
+                    --primary: #f0f;
+                    --background: #1a1a1a;
+                    --text: #ddd;
+                    --text-secondary: #aaa;
+                }
+                body {
+                    font-family: sans-serif;
+                    background: var(--background);
+                    color: var(--text);
+                }`
+        };
+
+        // Уведомления
+        function showNotification(message, isError = false) {
+            const notification = elements.notification;
+            notification.textContent = message;
+            notification.className = 'notification' + (isError ? ' error' : '');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Генерация частиц
         function createParticles() {
-            const container = document.getElementById('particles');
             const particleCount = window.innerWidth < 768 ? 20 : 40;
             
             for (let i = 0; i < particleCount; i++) {
@@ -440,9 +579,227 @@
                 particle.style.top = `${posY}%`;
                 particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
                 
-                container.appendChild(particle);
+                elements.particles.appendChild(particle);
             }
         }
+
+        // Обновление предпросмотра
+        function updatePreview() {
+            try {
+                const content = elements.markdown.value || "";
+                const html = marked.parse(content);
+                const theme = THEMES[elements.theme.value] || THEMES.default;
+                
+                const fullHtml = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${elements.siteName.value || 'Без названия'}</title>
+    <meta name="description" content="${elements.siteDescription.value || ''}">
+    <style>
+        ${theme}
+        body { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { background: rgba(0, 255, 157, 0.1); padding: 0.2em 0.4em; border-radius: 4px; }
+        pre { background: #1a1a1a; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 3px solid var(--primary); padding-left: 1rem; margin-left: 0; }
+    </style>
+</head>
+<body>
+    ${html}
+</body>
+</html>`;
+                
+                elements.preview.srcdoc = fullHtml;
+            } catch (e) {
+                console.error("Ошибка предпросмотра:", e);
+                showNotification("Ошибка в Markdown: " + e.message, true);
+            }
+        }
+
+        // Скачивание сайта
+        function downloadSite() {
+            try {
+                const content = elements.markdown.value || "";
+                const html = marked.parse(content);
+                const theme = THEMES[elements.theme.value] || THEMES.default;
+                const siteName = elements.siteName.value || 'darknet-site';
+                const cleanName = siteName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                
+                const fullHtml = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${siteName}</title>
+    <meta name="description" content="${elements.siteDescription.value || ''}">
+    <style>${theme}</style>
+</head>
+<body>
+    ${html}
+</body>
+</html>`;
+
+                const blob = new Blob([fullHtml], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${cleanName}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification("Сайт скачан!");
+            } catch (e) {
+                console.error("Ошибка скачивания:", e);
+                showNotification("Ошибка при скачивании: " + e.message, true);
+            }
+        }
+
+        // Публикация на GitHub
+        async function publishSite() {
+            if (!CONFIG.GITHUB_TOKEN || CONFIG.GITHUB_TOKEN === "YOUR_GITHUB_TOKEN_HERE") {
+                showNotification("Ошибка: GitHub токен не настроен", true);
+                return;
+            }
+
+            const btn = elements.publishBtn;
+            const originalText = btn.innerHTML;
+            
+            try {
+                // Подготовка кнопки
+                btn.disabled = true;
+                btn.innerHTML = `<svg class="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg> Публикация...`;
+                
+                // Подготовка данных
+                const siteId = `site-${Date.now()}`;
+                const path = `sites/${siteId}/index.html`;
+                const siteUrl = `${CONFIG.BASE_URL}sites/${siteId}/`;
+                
+                const htmlContent = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${elements.siteName.value || 'Без названия'}</title>
+    <meta name="description" content="${elements.siteDescription.value || ''}">
+    <style>
+        ${THEMES[elements.theme.value] || THEMES.default}
+        body { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { background: rgba(0, 255, 157, 0.1); padding: 0.2em 0.4em; border-radius: 4px; }
+        pre { background: #1a1a1a; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 3px solid var(--primary); padding-left: 1rem; margin-left: 0; }
+    </style>
+</head>
+<body>
+    ${marked.parse(elements.markdown.value || "")}
+    <footer style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--text-secondary);">
+        <small>Создано через РжомбаДаркнет</small>
+    </footer>
+</body>
+</html>`;
+                
+                // Отправка на GitHub
+                const response = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${CONFIG.GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        message: `Добавлен сайт: ${elements.siteName.value || siteId}`,
+                        content: btoa(unescape(encodeURIComponent(htmlContent)))
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Неизвестная ошибка GitHub");
+                }
+                
+                showNotification(`Сайт опубликован! Доступен по адресу: ${siteUrl}`);
+                window.open(siteUrl, '_blank');
+                
+            } catch (error) {
+                console.error("Ошибка публикации:", error);
+                showNotification(`Ошибка публикации: ${error.message}`, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // Применение шаблона
+        function applyTemplate() {
+            const template = elements.template.value;
+            if (template && TEMPLATES[template]) {
+                elements.markdown.value = TEMPLATES[template];
+                updatePreview();
+            }
+        }
+
+        // Сохранение в localStorage
+        function saveToLocalStorage() {
+            const data = {
+                markdown: elements.markdown.value,
+                siteName: elements.siteName.value,
+                siteDescription: elements.siteDescription.value,
+                domain: elements.domain.value,
+                theme: elements.theme.value,
+                template: elements.template.value
+            };
+            localStorage.setItem('rjombadarknet-builder', JSON.stringify(data));
+        }
+
+        // Загрузка из localStorage
+        function loadFromLocalStorage() {
+            const saved = JSON.parse(localStorage.getItem('rjombadarknet-builder') || '{}');
+            if (saved.markdown) elements.markdown.value = saved.markdown;
+            if (saved.siteName) elements.siteName.value = saved.siteName;
+            if (saved.siteDescription) elements.siteDescription.value = saved.siteDescription;
+            if (saved.domain) elements.domain.value = saved.domain;
+            if (saved.theme) elements.theme.value = saved.theme;
+            if (saved.template) elements.template.value = saved.template;
+            updatePreview();
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            // Создаем частицы
+            createParticles();
+            
+            // Загружаем сохраненные данные
+            loadFromLocalStorage();
+            
+            // Назначаем обработчики событий
+            elements.updateBtn.addEventListener('click', updatePreview);
+            elements.downloadBtn.addEventListener('click', downloadSite);
+            elements.publishBtn.addEventListener('click', publishSite);
+            elements.template.addEventListener('change', applyTemplate);
+            elements.theme.addEventListener('change', updatePreview);
+            
+            // Автосохранение
+            const inputs = ['markdown', 'siteName', 'siteDescription', 'domain', 'theme', 'template'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', saveToLocalStorage);
+            });
+            
+            // Автообновление предпросмотра с задержкой
+            let debounceTimer;
+            elements.markdown.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(updatePreview, 500);
+            });
+            
+            // Первоначальное обновление предпросмотра
+            updatePreview();
+        });
 
         // Добавляем стили для анимации частиц
         document.head.insertAdjacentHTML('beforeend', `
@@ -463,363 +820,6 @@
                 }
             </style>
         `);
-
-        // Обновление предпросмотра
-        function updatePreview() {
-            try {
-                const content = document.getElementById('markdown').value || "";
-                const html = marked.parse(content);
-                const theme = getThemeStyle();
-                const fullHtml = `<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${document.getElementById('siteName').value || 'Без названия'}</title>
-    <meta name="description" content="${document.getElementById('siteDescription').value || ''}">
-    <style>
-        ${theme}
-        body { padding: 2rem; max-width: 1000px; margin: 0 auto; }
-        a { color: var(--primary); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        code { background: rgba(0, 255, 157, 0.1); padding: 0.2em 0.4em; border-radius: 4px; }
-        pre { background: #1a1a1a; padding: 1rem; border-radius: 8px; overflow-x: auto; }
-        blockquote { border-left: 3px solid var(--primary); padding-left: 1rem; margin-left: 0; }
-    </style>
-</head>
-<body>
-    ${html}
-</body>
-</html>`;
-                document.getElementById('preview').srcdoc = fullHtml;
-            } catch (e) {
-                console.error("Ошибка при обновлении предпросмотра:", e);
-                document.getElementById('preview').srcdoc = `<h1>Ошибка</h1><p>${e.message}</p>`;
-            }
-        }
-
-        // Скачивание HTML-файла
-        function downloadSite() {
-            try {
-                const content = document.getElementById('markdown').value || "";
-                const html = marked.parse(content);
-                const theme = getThemeStyle();
-                const siteName = document.getElementById('siteName').value || 'darknet-site';
-                const cleanName = siteName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-                
-                const fullHtml = `<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${siteName}</title>
-    <meta name="description" content="${document.getElementById('siteDescription').value || ''}">
-    <style>${theme}</style>
-</head>
-<body>
-    ${html}
-</body>
-</html>`;
-
-                const blob = new Blob([fullHtml], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${cleanName}.html`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            } catch (e) {
-                alert(`Ошибка при скачивании: ${e.message}`);
-                console.error(e);
-            }
-        }
-
-        // Получение стилей для выбранной темы
-        function getThemeStyle() {
-            const theme = document.getElementById('theme').value;
-            
-            const themes = {
-                default: `
-                    :root {
-                        --primary: #00ff9d;
-                        --background: #0d0d0d;
-                        --text: #f0f0f0;
-                        --text-secondary: #b0b0b0;
-                    }
-                    body {
-                        font-family: 'IBM Plex Mono', monospace;
-                        background: var(--background);
-                        color: var(--text);
-                    }`,
-                
-                terminal: `
-                    :root {
-                        --primary: #0f0;
-                        --background: #000;
-                        --text: #0f0;
-                        --text-secondary: #090;
-                    }
-                    body {
-                        font-family: monospace;
-                        background: var(--background);
-                        color: var(--text);
-                    }
-                    pre, code {
-                        background: #111 !important;
-                    }`,
-                
-                ghost: `
-                    :root {
-                        --primary: #f0f;
-                        --background: #1a1a1a;
-                        --text: #ddd;
-                        --text-secondary: #aaa;
-                    }
-                    body {
-                        font-family: sans-serif;
-                        background: var(--background);
-                        color: var(--text);
-                    }`
-            };
-            
-            return themes[theme] || themes.default;
-        }
-
-        // Применение выбранной темы
-        function applyTheme() {
-            updatePreview();
-        }
-
-        // Применение шаблона
-        function applyTemplate() {
-            const template = document.getElementById('template').value;
-            
-            const templates = {
-                shop: `# Магазин "Чёрный Изумруд"
-
-Добро пожаловать в самый тёмный рынок Майнкрафта.
-
-## 🔥 Товары
-- Незеритовый меч — 10 изумрудов
-- Зелье невидимости — 4 изумруда
-- Эндерперлы — 2 изумруда за штуку
-
-## 📦 Как купить
-Напишите в игре:  
-\`/tell ShopKeeper купить <товар>\`
-
-> Работаем только с проверенными игроками!`,
-
-                blog: `# Анонимные мысли
-
-*Сегодня я увидел, как крипер обнял мою базу... Я плакал.*
-
-## Случайный совет
-Если у тебя есть ведро воды — у тебя есть шанс.
-
-## Мои правила
-1. Никогда не копай под собой
-2. Всегда носи с собой кровать
-3. Доверяй только алмазам`,
-
-                guide: `# Как установить мод на Майнкрафт
-
-## 📥 Шаг 1: Подготовка
-1. Скачайте мод с [проверенного сайта](https://www.curseforge.com)
-2. Установите [Forge](https://files.minecraftforge.net/)
-
-## 🛠 Шаг 2: Установка
-1. Откройте папку \`mods\`:
-   - Windows: \`%appdata%\\.minecraft\\mods\\\`
-   - Mac: \`~/Library/Application Support/minecraft/mods/\`
-2. Перетащите файл мода в эту папку
-
-> ⚠️ Сделайте бэкап мира перед установкой!`
-            };
-            
-            if (template && templates[template]) {
-                document.getElementById('markdown').value = templates[template];
-                updatePreview();
-            }
-        }
-
-        // Публикация сайта на GitHub
-        async function publishSite() {
-            const btn = document.getElementById('publishBtn');
-            const originalHtml = btn.innerHTML;
-            
-            try {
-                // Проверка токена
-                if (!GITHUB_TOKEN || GITHUB_TOKEN === "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") {
-                    throw new Error("GitHub токен не настроен. Замените YOUR_GITHUB_TOKEN_HERE в коде на свой токен.");
-                }
-                
-                // Подготовка кнопки
-                btn.innerHTML = `<span class="spinner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg></span> Публикация...`;
-                btn.disabled = true;
-                
-                // Получение данных формы
-                const siteName = document.getElementById('siteName').value || 'Без названия';
-                const siteDescription = document.getElementById('siteDescription').value || '';
-                const fakeDomain = document.getElementById('domain').value || '';
-                const markdownContent = document.getElementById('markdown').value || '';
-                const theme = document.getElementById('theme').value;
-                
-                // Генерация HTML
-                const htmlContent = `<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${siteName}</title>
-    <meta name="description" content="${siteDescription}">
-    <style>
-        ${getThemeStyle()}
-        body { padding: 2rem; max-width: 1000px; margin: 0 auto; }
-        a { color: var(--primary); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        code { background: rgba(0, 255, 157, 0.1); padding: 0.2em 0.4em; border-radius: 4px; }
-        pre { background: #1a1a1a; padding: 1rem; border-radius: 8px; overflow-x: auto; }
-        blockquote { border-left: 3px solid var(--primary); padding-left: 1rem; margin-left: 0; }
-    </style>
-</head>
-<body>
-    ${marked.parse(markdownContent)}
-    <footer style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--text-secondary);">
-        <small>Создано через РжомбаДаркнет</small>
-    </footer>
-</body>
-</html>`;
-                
-                // Создание уникального имени для сайта
-                const siteId = `site-${Date.now()}`;
-                const sitePath = `sites/${siteId}/index.html`;
-                const siteUrl = `${GITHUB_PAGES_URL}sites/${siteId}/`;
-                
-                // Отправка на GitHub
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${sitePath}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify({
-                        message: `Добавлен сайт: ${siteName}`,
-                        content: btoa(unescape(encodeURIComponent(htmlContent)))
-                    })
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || "Неизвестная ошибка GitHub");
-                }
-                
-                // Обновление data.json (если нужно)
-                try {
-                    const dataResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data.json`, {
-                        headers: {
-                            'Authorization': `token ${GITHUB_TOKEN}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    
-                    let existingData = { sites: [] };
-                    let sha = null;
-                    
-                    if (dataResponse.ok) {
-                        const data = await dataResponse.json();
-                        existingData = JSON.parse(atob(data.content));
-                        sha = data.sha;
-                    }
-                    
-                    // Добавляем новый сайт
-                    existingData.sites.unshift({
-                        id: siteId,
-                        name: siteName,
-                        description: siteDescription,
-                        domain: fakeDomain,
-                        url: siteUrl,
-                        createdAt: new Date().toISOString(),
-                        theme: theme
-                    });
-                    
-                    // Обновляем data.json
-                    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data.json`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `token ${GITHUB_TOKEN}`,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/vnd.github.v3+json'
-                        },
-                        body: JSON.stringify({
-                            message: `Обновление data.json: добавлен ${siteName}`,
-                            content: btoa(unescape(encodeURIComponent(JSON.stringify(existingData, null, 2)))),
-                            sha: sha
-                        })
-                    });
-                } catch (e) {
-                    console.warn("Не удалось обновить data.json:", e);
-                }
-                
-                // Успех!
-                alert(`✅ Сайт "${siteName}" успешно опубликован!\n\nДоступен по адресу:\n${siteUrl}\n\nФейковый домен: ${fakeDomain || 'не указан'}`);
-                window.open(siteUrl, '_blank');
-                
-            } catch (error) {
-                console.error("Ошибка публикации:", error);
-                alert(`❌ Ошибка публикации:\n${error.message}\n\nПроверьте консоль для подробностей.`);
-            } finally {
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }
-        }
-
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            updatePreview();
-            
-            // Автосохранение в localStorage
-            const saveInputs = () => {
-                const data = {
-                    markdown: document.getElementById('markdown').value,
-                    siteName: document.getElementById('siteName').value,
-                    siteDescription: document.getElementById('siteDescription').value,
-                    domain: document.getElementById('domain').value,
-                    theme: document.getElementById('theme').value,
-                    template: document.getElementById('template').value
-                };
-                localStorage.setItem('rjombadarknet-builder', JSON.stringify(data));
-            };
-            
-            // Загрузка из localStorage
-            const loadInputs = () => {
-                const saved = JSON.parse(localStorage.getItem('rjombadarknet-builder') || '{}');
-                if (saved.markdown) document.getElementById('markdown').value = saved.markdown;
-                if (saved.siteName) document.getElementById('siteName').value = saved.siteName;
-                if (saved.siteDescription) document.getElementById('siteDescription').value = saved.siteDescription;
-                if (saved.domain) document.getElementById('domain').value = saved.domain;
-                if (saved.theme) document.getElementById('theme').value = saved.theme;
-                if (saved.template) document.getElementById('template').value = saved.template;
-                updatePreview();
-            };
-            
-            // Назначение обработчиков
-            document.querySelectorAll('textarea, input, select').forEach(el => {
-                el.addEventListener('input', saveInputs);
-            });
-            
-            loadInputs();
-            
-            // Автообновление предпросмотра при изменении
-            document.getElementById('markdown').addEventListener('input', () => {
-                clearTimeout(this.debounceTimer);
-                this.debounceTimer = setTimeout(updatePreview, 500);
-            });
-        });
     </script>
 </body>
 </html>
