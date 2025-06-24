@@ -395,6 +395,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
+        // Вставьте ваш GitHub Personal Access Token здесь
+        const GITHUB_TOKEN = "YOUR_GITHUB_TOKEN_HERE"; // ЗАМЕНИТЕ НА ВАШ ТОКЕН
+
         // Генерация частиц
         function createParticles() {
             const container = document.getElementById('particles');
@@ -525,6 +528,11 @@
         }
 
         async function publishSite() {
+            if (!GITHUB_TOKEN || GITHUB_TOKEN === "YOUR_GITHUB_TOKEN_HERE") {
+                alert("Ошибка: GitHub токен не настроен. Пожалуйста, задайте токен в коде.");
+                return;
+            }
+
             const repo = "Oblienkov/rjombadarknet";
             const filename = `darknet-${Math.random().toString(36).substring(2, 7)}`;
             const path = `sites/${filename}/index.html`;
@@ -545,16 +553,12 @@
             const b64 = btoa(unescape(encodeURIComponent(content)));
 
             try {
-                // Запрашиваем GitHub токен у пользователя
-                const token = prompt("Для публикации введите ваш GitHub Personal Access Token (с правами repo):");
-                if (!token) return;
-
                 const api = `https://api.github.com/repos/${repo}/contents/${path}`;
 
                 const res = await fetch(api, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `token ${token}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -577,7 +581,7 @@
                 
                 try {
                     const getRes = await fetch(apiMeta, {
-                        headers: { 'Authorization': `token ${token}` }
+                        headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
                     });
                     
                     if (getRes.ok) {
@@ -605,7 +609,7 @@
                 const res2 = await fetch(apiMeta, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `token ${token}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
