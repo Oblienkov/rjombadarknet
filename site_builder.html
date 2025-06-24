@@ -705,18 +705,18 @@
 </html>`;
                 
                 // Отправка на GitHub
-                const response = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${path}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${CONFIG.GITHUB_TOKEN}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify({
-                        message: `Добавлен сайт: ${elements.siteName.value || siteId}`,
-                        content: btoa(unescape(encodeURIComponent(htmlContent)))
-                    })
-                });
+              const response = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: {
+        'Authorization': `token ${CONFIG.GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+    },
+    body: JSON.stringify({
+        message: `Добавлен сайт: ${elements.siteName.value || siteId}`,
+        content: btoa(unescape(encodeURIComponent(htmlContent)))
+    })
+});
                 
                 if (!response.ok) {
                     const errorData = await response.json();
